@@ -1,0 +1,148 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Dummy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class DummyTest extends TestCase
+{
+    use  RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
+
+    public function testCreateDummy(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        $data = [
+        ];
+
+        $this->json('POST', '/api/dummies', $data)
+             ->assertStatus(201)
+             ->assertSee($data['name']);
+    }
+
+    public function testViewAllDummiesSuccessfully(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        Dummy::factory(5)->create();
+
+        $this->json('GET', '/api/dummies')
+             ->assertStatus(200)
+             ->assertSee(Dummy::find(rand(1, 5))->name);
+    }
+
+    public function testsCreateDummyValidation(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        $data = [
+        ];
+
+        $this->json('post', '/api/dummies', $data)
+             ->assertJsonValidationErrors('')
+             ->assertStatus(422);
+    }
+
+    public function testViewDummyData(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        Dummy::factory()->create();
+
+        $this->json('GET', '/api/dummies/1')
+             ->assertSee(Dummy::first()->name)
+             ->assertStatus(200);
+    }
+
+    public function testUpdateDummy(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        $data = [
+
+        ];
+
+        $this->json('POST', '/api/dummies', $data);
+
+        $payload = [
+
+        ];
+
+        $this->json('PUT', '/api/dummies/1', $payload)
+             ->assertStatus(200)
+             ->assertSee($payload['name']);
+    }
+
+    public function testDeleteDummy(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        Dummy::factory()->create();
+
+        $this->json('DELETE', '/api/dummies/1')
+             ->assertStatus(204);
+
+        $this->assertEquals(1, Dummy::onlyTrashed()->whereNotNull('deleted_at')->get()->count());
+    }
+
+    public function testRestoreDummy(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        Dummy::factory()->create();
+
+        $this->json('DELETE', '/api/dummies/1')
+             ->assertStatus(204);
+
+        $this->json('GET', '/api/dummies/1/restore')
+             ->assertStatus(200);
+
+        $this->assertDatabaseHas('dummies', [
+            'id'         => 1,
+            'deleted_at' => null,
+        ]);
+    }
+
+    public function testPermanentDummy(): void
+    {
+        $this->markTestIncomplete('This test case needs review.');
+
+        $this->actingAs(User::factory()->create());
+
+        $data = [
+        ];
+
+        $this->json('POST', '/api/dummies', $data);
+
+        $this->json('DELETE', '/api/dummies/1')
+             ->assertStatus(204);
+
+        $this->json('DELETE', '/api/dummies/1/permanent-delete')
+             ->assertStatus(204);
+
+        $this->assertDatabaseMissing('dummies', ['id' => 1]);
+
+    }
+}

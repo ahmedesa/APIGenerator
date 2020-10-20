@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Dummy;
+
+class DummyService
+{
+    protected $model;
+
+    /**
+     * DummyService constructor.
+     * @param $model
+     */
+    public function __construct(Dummy $model)
+    {
+        $this->model = $model;
+    }
+}

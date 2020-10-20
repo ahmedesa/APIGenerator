@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\Dummy;
+use App\Http\Resources\Dummies\DummyResource;
+use App\Http\Resources\Dummies\DummyCollection;
+use App\Http\Requests\Dummies\CreateDummyRequest;
+use App\Http\Requests\Dummies\UpdateDummyRequest;
+use App\Http\Controllers\Controller;
+use App\Services\DummyService;
+
+class DummyController extends Controller
+{
+    protected $dummy_service;
+
+    public function __construct(DummyService $dummy_service)
+    {
+        $this->dummy_service = $dummy_service;
+
+        $this->middleware(['auth:api']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        return $this->responseSuccess(null, new DummyCollection(Dummy::all()));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  CreateDummyRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(CreateDummyRequest $request)
+    {
+        $dummy = Dummy::create($request->all());
+
+        return $this->responseCreated('Dummy created successfully', new DummyResource($dummy));
+     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Dummy $dummy)
+    {
+        return $this->responseSuccess(null, new DummyResource($dummy));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  UpdateDummyRequest  $request
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(UpdateDummyRequest $request, Dummy $dummy)
+    {
+        $dummy->update($request->all());
+
+        return $this->responseSuccess('Dummy updated Successfully', new DummyResource($dummy));
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(Dummy $dummy)
+    {
+        $dummy->delete();
+
+        return $this->responseDeleted();
+
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function restore($id)
+    {
+        $dummy = Dummy::onlyTrashed()->findOrFail($id);
+
+        $dummy->restore();
+
+        return $this->responseSuccess('Dummy restored Successfully.');
+    }
+
+    /**
+     * permanent delete
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function permanentDelete($id)
+    {
+        $dummy = Dummy::onlyTrashed()->findOrFail($id);
+
+        $dummy->forceDelete();
+
+        return $this->responseDeleted();
+    }
+}
