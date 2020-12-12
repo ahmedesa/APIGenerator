@@ -63,14 +63,6 @@ class Generator
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Controllers/API"));
         }
 
-        if (!file_exists(app_path($baseFolder . "/Http/Resources"))) {
-            $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Resources"));
-        }
-
-        if (!file_exists(app_path($baseFolder . "/Http/Resources/" . $this->model))) {
-            $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Resources/" . $this->model));
-        }
-
         if (!file_exists(app_path($baseFolder . "/Helpers"))) {
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Helpers"));
         }
