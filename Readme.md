@@ -1,6 +1,6 @@
 ## Installation
 ```
-composer require essa/api_generator:dev-master
+composer require essa/api_generator
 ```
 
 

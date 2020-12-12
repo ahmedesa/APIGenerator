@@ -63,6 +63,7 @@ class Generator
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Controllers/API"));
         }
 
+<<<<<<< HEAD
         if (!file_exists(app_path($baseFolder . "/Http/Resources"))) {
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Resources"));
         }
@@ -71,6 +72,8 @@ class Generator
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Http/Resources/" . $this->model));
         }
 
+=======
+>>>>>>> 1.0
         if (!file_exists(app_path($baseFolder . "/Helpers"))) {
             $this->filesystem->makeDirectory(app_path($baseFolder . "/Helpers"));
         }
@@ -84,8 +87,11 @@ class Generator
 
         $this->createService();
 
+<<<<<<< HEAD
         $this->createResources();
 
+=======
+>>>>>>> 1.0
         $this->createTest();
     }
 
@@ -109,6 +115,7 @@ class Generator
         file_put_contents(app_path("Services/{$this->model}Service.php"), $this->getTemplate('DummyService'));
     }
 
+<<<<<<< HEAD
     protected function createResources()
     {
         file_put_contents(app_path("Http/Resources/{$this->model}/{$this->model}Collection.php"), $this->getTemplate('DummyResourceCollection'));
@@ -116,6 +123,8 @@ class Generator
         file_put_contents(app_path("Http/Resources/{$this->model}/{$this->model}Resource.php"), $this->getTemplate('DummyResource'));
     }
 
+=======
+>>>>>>> 1.0
     /**
      */
     private function calls()
