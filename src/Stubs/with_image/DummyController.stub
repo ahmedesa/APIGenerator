@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\Dummy;
+use App\Helpers\MediaHelper;
+use App\Services\DummyService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Dummy\CreateDummyRequest;
+use App\Http\Requests\Dummy\UpdateDummyRequest;
+use essa\APIGenerator\Http\Resources\JSONAPIResource;
+use essa\APIGenerator\Http\Resources\JSONAPICollection;
+
+class DummyController extends Controller
+{
+    protected $dummy_service;
+
+    public function __construct(DummyService $dummy_service)
+    {
+        $this->dummy_service = $dummy_service;
+
+        $this->middleware(['auth:api']);
+    }
+
+    /**
+     * Display a listing of dummies.
+     *
+     * @return JSONAPICollection
+     */
+    public function index()
+    {
+        return new JSONAPICollection($this->dummy_service->fetchAll());
+    }
+
+    /**
+     * Store a newly created dummy in storage.
+     *
+     * @param  CreateDummyRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(CreateDummyRequest $request)
+    {
+        $dummy = Dummy::create($request->except('image'));
+
+        $dummy->image = MediaHelper::uploadImage($request->file('image'), 'dummies');
+
+        $dummy->save();
+
+        return $this->responseCreated('Dummy created successfully', new JSONAPIResource($dummy));
+    }
+
+    /**
+     * Display a specified dummy.
+     *
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Dummy $dummy)
+    {
+        return $this->responseSuccess(null, new JSONAPIResource($dummy));
+    }
+
+    /**
+     * Update a specified dummy in storage.
+     *
+     * @param  UpdateDummyRequest  $request
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(UpdateDummyRequest $request, Dummy $dummy)
+    {
+        $dummy->update($request->except('image'));
+
+        if ($request->file('image')) {
+            $dummy->image = MediaHelper::uploadImage($request->file('image'), 'dummies', $dummy->image);
+            $dummy->save();
+        }
+
+        return $this->responseSuccess('Dummy updated Successfully', new JSONAPIResource($dummy));
+    }
+
+    /**
+     * Remove a specified dummy from storage.
+     *
+     * @param  \App\Models\Dummy  $dummy
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(Dummy $dummy)
+    {
+        $dummy->delete();
+
+        return $this->responseDeleted();
+
+    }
+
+    /**
+     * restore a specified dummy from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function restore($id)
+    {
+        $dummy = Dummy::onlyTrashed()->findOrFail($id);
+
+        $dummy->restore();
+
+        return $this->responseSuccess('Dummy restored Successfully.');
+    }
+
+    /**
+     * Permanent delete a specified dummy from storage.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function permanentDelete($id)
+    {
+        $dummy = Dummy::withTrashed()->findOrFail($id);
+
+        MediaHelper::deleteImage($dummy->image);
+
+        $dummy->forceDelete();
+
+        return $this->responseDeleted();
+    }
+}
