@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Dummy;
-use App\Http\Resources\Dummies\DummyResource;
-use App\Http\Resources\Dummies\DummyCollection;
-use App\Http\Requests\Dummies\CreateDummyRequest;
-use App\Http\Requests\Dummies\UpdateDummyRequest;
-use App\Http\Controllers\Controller;
 use App\Services\DummyService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Dummy\CreateDummyRequest;
+use App\Http\Requests\Dummy\UpdateDummyRequest;
+use essa\APIGenerator\Http\Resources\JSONAPIResource;
+use essa\APIGenerator\Http\Resources\JSONAPICollection;
 
 class DummyController extends Controller
 {
@@ -22,17 +22,17 @@ class DummyController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Display a listing of dummies.
+     * 
+     * @return JSONAPICollection
      */
     public function index()
     {
-        return $this->responseSuccess(null, new DummyCollection(Dummy::all()));
+        return new JSONAPICollection($this->dummy_service->fetchAll());
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created dummy in storage.
      *
      * @param  CreateDummyRequest  $request
      * @return \Illuminate\Http\JsonResponse
@@ -41,22 +41,22 @@ class DummyController extends Controller
     {
         $dummy = Dummy::create($request->all());
 
-        return $this->responseCreated('Dummy created successfully', new DummyResource($dummy));
-     }
+        return $this->responseCreated('Dummy created successfully', new JSONAPIResource($dummy));
+    }
 
     /**
-     * Display the specified resource.
+     * Display a specified dummy.
      *
      * @param  \App\Models\Dummy  $dummy
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Dummy $dummy)
     {
-        return $this->responseSuccess(null, new DummyResource($dummy));
+        return $this->responseSuccess(null, new JSONAPIResource($dummy));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a specified dummy in storage.
      *
      * @param  UpdateDummyRequest  $request
      * @param  \App\Models\Dummy  $dummy
@@ -66,12 +66,11 @@ class DummyController extends Controller
     {
         $dummy->update($request->all());
 
-        return $this->responseSuccess('Dummy updated Successfully', new DummyResource($dummy));
-
+        return $this->responseSuccess('Dummy updated Successfully', new JSONAPIResource($dummy));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a specified dummy from storage.
      *
      * @param  \App\Models\Dummy  $dummy
      * @return \Illuminate\Http\JsonResponse
@@ -86,6 +85,8 @@ class DummyController extends Controller
     }
 
     /**
+     * restore a specified dummy from storage.
+     *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -99,13 +100,13 @@ class DummyController extends Controller
     }
 
     /**
-     * permanent delete
+     * Permanent delete a specified dummy from storage.
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function permanentDelete($id)
     {
-        $dummy = Dummy::onlyTrashed()->findOrFail($id);
+        $dummy = Dummy::withTrashed()->findOrFail($id);
 
         $dummy->forceDelete();
 

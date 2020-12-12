@@ -1,11 +1,11 @@
 <?php
 
-namespace essa\CrudGenerator;
+namespace essa\APIGenerator;
 
-use essa\CrudGenerator\Commands\CrudGenerator;
+use essa\APIGenerator\Commands\GenerateComponent;
 use Illuminate\Support\ServiceProvider;
 
-class CrudGeneratorServiceProvider extends ServiceProvider
+class APIGeneratorServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -25,7 +25,7 @@ class CrudGeneratorServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                GenerateModule::class,
+                GenerateComponent::class,
             ]);
         }
     }

@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Dummy;
+use Spatie\QueryBuilder\QueryBuilder;
+
+class DummyService
+{
+    protected $model;
+
+    /**
+     * DummyService constructor.
+     * @param $model
+     */
+    public function __construct(Dummy $model)
+    {
+        $this->model = $model;
+    }
+
+    public function fetchAll()
+    {
+        return QueryBuilder::for($this->model)
+                        ->allowedFilters($this->model::filters())
+                        ->allowedIncludes($this->model::includes())
+                        ->allowedSorts($this->model::sorts())
+                        ->get();
+    }
+}
