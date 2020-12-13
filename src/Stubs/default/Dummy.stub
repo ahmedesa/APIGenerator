@@ -36,26 +36,4 @@ class Dummy extends BaseModel
     protected $hidden = [
 
     ];
-
-    public static function filters() :array
-    {
-       return [
-            AllowedFilter::trashed(),
-            AllowedFilter::exact('foo'),
-       ];
-    }
-
-    public static function includes() :array
-    {
-        return [
-            'foo',
-        ];
-    }
-
-    public static function sorts() :array
-    {
-        return [
-            'foo',
-        ];
-    }
 }

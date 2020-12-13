@@ -5,7 +5,7 @@ namespace essa\APIGenerator\Model;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseModel extends Model implements ModelInterface
+abstract class BaseModel extends Model
 {
     protected function serializeDate(DateTimeInterface $date)
     {
@@ -19,10 +19,6 @@ abstract class BaseModel extends Model implements ModelInterface
      */
     public function getImage($image)
     {
-        if (!is_null($this->$image)) {
-            return asset('storage/' . $this->$image);
-        }
-
-        return null;
+        return !is_null($this->image) ? asset('storage/' . $this->image) : null;
     }
 }

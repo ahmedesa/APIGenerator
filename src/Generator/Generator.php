@@ -55,8 +55,8 @@ class Generator
 
     protected function createFolders($baseFolder = '')
     {
-        if (!file_exists(app_path($baseFolder . "/Services"))) {
-            $this->filesystem->makeDirectory(app_path($baseFolder . "/Services"));
+        if (!file_exists(app_path($baseFolder . "/Repositories"))) {
+            $this->filesystem->makeDirectory(app_path($baseFolder . "/Repositories"));
         }
 
         if (!file_exists(app_path($baseFolder . "/Http/Controllers/API"))) {
@@ -74,7 +74,7 @@ class Generator
 
         $this->createController();
 
-        $this->createService();
+        $this->createRepository();
 
         $this->createTest();
     }
@@ -94,9 +94,9 @@ class Generator
         file_put_contents(base_path("tests/Feature/{$this->model}Test.php"), $this->getTemplate('DummyTest'));
     }
 
-    protected function createService()
+    protected function createRepository()
     {
-        file_put_contents(app_path("Services/{$this->model}Service.php"), $this->getTemplate('DummyService'));
+        file_put_contents(app_path("Repositories/{$this->model}Repository.php"), $this->getTemplate('DummyRepository'));
     }
 
     /**

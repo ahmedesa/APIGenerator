@@ -10,6 +10,8 @@ class JSONAPIResource extends JsonResource
 {
     use HasRelationship;
 
+    private $self_link;
+
     /**
      * @param $request
      * @return array
@@ -25,13 +27,40 @@ class JSONAPIResource extends JsonResource
                 'deleted_at' => $this->deleted_at ? $this->deleted_at->format('d-m-Y H:i:s') : null,
             ]),
             'links'         => [
-                'self' => url('/api/' . Str::plural(Str::snake(class_basename($this->resource))) . '/' . $this->id),
+                'self' => $this->getSelfLink(),
             ],
             'relationships' => $this->relationships(),
         ];
     }
 
-    public function getResourceIdentifier()
+    public function getSelfLink()
+    {
+        if ($this->self_link) {
+            return url((str_replace('{id}', $this->id, $this->self_link)));
+        }
+
+        $model_name = Str::plural(Str::snake(class_basename($this->resource)));
+        $config = config("jsonapi.resources." . $model_name . ".link");
+
+        $link = isset($config)
+            ? (str_replace('{id}', $this->id, $config))
+            : '/api/' . $model_name . '/' . $this->id;
+
+        return url($link);
+    }
+
+    /**
+     * @param mixed $self_link
+     * @return JSONAPIResource
+     */
+    public function setSelfLink($self_link): JSONAPIResource
+    {
+        $this->self_link = $self_link;
+
+        return $this;
+    }
+
+    public function getResourceIdentifier(): array
     {
         return [
             'id'   => $this->id,
@@ -39,7 +68,7 @@ class JSONAPIResource extends JsonResource
         ];
     }
 
-    public function allowedAttributes()
+    public function allowedAttributes(): ?\Illuminate\Support\Collection
     {
         return collect($this->resource->toArray())
             ->except('id', 'created_at', 'updated_at', 'deleted_at')
@@ -53,7 +82,7 @@ class JSONAPIResource extends JsonResource
     /**
      * @throws \ReflectionException
      */
-    public function relationships()
+    public function relationships(): ?array
     {
         $class = get_class($this->resource);
 

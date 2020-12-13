@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Dummy;
 use App\Helpers\MediaHelper;
-use App\Services\DummyService;
+use App\Repositories\DummyRepository;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dummy\CreateDummyRequest;
 use App\Http\Requests\Dummy\UpdateDummyRequest;
@@ -13,11 +13,11 @@ use essa\APIGenerator\Http\Resources\JSONAPICollection;
 
 class DummyController extends Controller
 {
-    protected $dummy_service;
+    protected $dummy_repository;
 
-    public function __construct(DummyService $dummy_service)
+    public function __construct(DummyRepository $dummy_repository)
     {
-        $this->dummy_service = $dummy_service;
+        $this->dummy_repository = $dummy_repository;
 
         $this->middleware(['auth:api']);
     }
@@ -29,7 +29,7 @@ class DummyController extends Controller
      */
     public function index()
     {
-        return new JSONAPICollection($this->dummy_service->fetchAll());
+        return new JSONAPICollection($this->dummy_repository->fetchAll());
     }
 
     /**

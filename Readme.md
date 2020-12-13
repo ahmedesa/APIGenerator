@@ -2,8 +2,10 @@
 ```
 composer require essa/api_generator
 ```
-
-
+##Config
+```
+php artisan vendor:publish --provider="essa\APIGenerator\APIGeneratorServiceProvider" --tag="config"
+```
 
 ### Exceptions:
 
