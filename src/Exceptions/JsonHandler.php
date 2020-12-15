@@ -53,8 +53,6 @@ class JsonHandler extends ExceptionHandler
             if ($exception instanceof BadRequestHttpException) {
                 return $this->responseBadRequest($exception->getMessage(), Str::title(Str::snake(class_basename($exception), ' ')));
             }
-
-            return $this->responseWithCustomError(Str::title(Str::snake(class_basename($exception), ' ')), $exception->getMessage(), $exception->getCode());
         }
 
         return parent::render($request, $exception);
