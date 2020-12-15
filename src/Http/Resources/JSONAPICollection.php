@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Resources\Dummies;
+namespace essa\APIGenerator\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class DummyCollection extends ResourceCollection
+class JSONAPICollection extends ResourceCollection
 {
+    public $collects = JSONAPIResource::class;
+
     /**
-     * Transform the resource collection into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-
-    public $collects = DummyResource::class;
-
     public function toArray($request)
     {
         return [

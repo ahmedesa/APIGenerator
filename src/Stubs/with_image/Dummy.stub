@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Models;
+
+use Spatie\QueryBuilder\AllowedFilter;
+use essa\APIGenerator\Model\BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+/**
+ * @mixin \Eloquent
+ */
+class Dummy extends BaseModel
+{
+    use HasFactory, SoftDeletes;
+
+    protected $appends =['image_url'];
+
+    /**
+     * Mass-assignable attributes.
+     *
+     * @var array
+     */
+    protected $fillable = [
+
+    ];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [
+
+    ];
+
+    /**
+     * @var array
+     */
+    protected $dates = [
+
+    ];
+
+    /**
+     * get image full url
+     * @return ?string
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->getImage($this->image);
+    }
+}

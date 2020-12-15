@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories;
 
 use App\Models\Dummy;
+use essa\APIGenerator\Repositories\BaseRepository;
 
-class DummyService
+class DummyRepository extends BaseRepository
 {
     protected $model;
 
     /**
-     * DummyService constructor.
+     * DummyRepository constructor.
      * @param $model
      */
     public function __construct(Dummy $model)

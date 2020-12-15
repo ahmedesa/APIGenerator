@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\Dummy;
+use essa\APIGenerator\Repositories\BaseRepository;
+
+class DummyRepository extends BaseRepository
+{
+    protected $model;
+
+    /**
+     * DummyRepository constructor.
+     * @param $model
+     */
+    public function __construct(Dummy $model)
+    {
+        $this->model = $model;
+    }
+}
