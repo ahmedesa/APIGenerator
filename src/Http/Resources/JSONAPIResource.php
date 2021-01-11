@@ -29,7 +29,7 @@ class JSONAPIResource extends JsonResource
             'links'         => [
                 'self' => $this->getSelfLink(),
             ],
-            'relationships' => $this->relationships(),
+            'relationships' => empty($this->resource->getRelations()) ? (object)[] : $this->relationships(),
         ];
     }
 
